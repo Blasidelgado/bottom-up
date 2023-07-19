@@ -5,6 +5,8 @@
 
 #include "bmp.h"
 
+void reverse_image();
+
 int main(int argc, char *argv[])
 {
     // Ensure proper usage
@@ -52,9 +54,12 @@ int main(int argc, char *argv[])
         printf("Unsupported file format.\n");
         return 4;
     }
-    
+
     // Write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
+
+    // Invert biHeight so image is a bottom-up DIB
+    bi.biHeight = bi.biHeight * -1;
 
     // Write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
@@ -73,6 +78,8 @@ int main(int argc, char *argv[])
 
             // Read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+
+            //
 
             // Write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
